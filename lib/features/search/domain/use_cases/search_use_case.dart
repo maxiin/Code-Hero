@@ -8,7 +8,7 @@ class SearchUseCase implements SearchUseCaseInterface {
   SearchUseCase(this.repo);
 
   @override
-  Future<MarvelSearch> call(String? query) async {
-    return await repo.search(query);;
+  Future<MarvelSearch> call(String? query, int page) async {
+    return await repo.search(query, page);
   }
 }

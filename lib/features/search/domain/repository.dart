@@ -11,8 +11,8 @@ class SearchRepository implements SearchRepositoryInterface {
   SearchRepository(this.remote);
 
   @override
-  Future<MarvelSearch> search(String? query) async {
-    SearchApi searchResponse = await remote.search(query);
+  Future<MarvelSearch> search(String? query, int page) async {
+    SearchApi searchResponse = await remote.search(query, page);
     List<MarvelHero> heroesList = [];
     for (var heroesApi in searchResponse.results) {
       heroesList.add(
@@ -30,8 +30,8 @@ class SearchRepository implements SearchRepositoryInterface {
         ));
     }
     return MarvelSearch(
-      page: searchResponse.offset == 0 ? 1 : (searchResponse.offset / searchResponse.count).ceil(),
-      available: (searchResponse.total / searchResponse.count).ceil(),
+      page: searchResponse.offset == 0 ? 1 : (searchResponse.offset / searchResponse.count).ceil() + 1,
+      available: searchResponse.total == 0 ? 0 : (searchResponse.total / searchResponse.count).ceil(),
       heroes: heroesList
     );
   }

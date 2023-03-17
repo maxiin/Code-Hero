@@ -17,6 +17,8 @@ class SearchPage extends StatefulWidget {
 class SearchPageState extends State<SearchPage> {
   late SearchPageViewModel viewModel;
   final int listSize = 4;
+  int? backButtonPage = 0;
+  int? nextButtonPage = 0;
 
   @override
   void initState() {
@@ -33,23 +35,30 @@ class SearchPageState extends State<SearchPage> {
   }
 
   Widget pageButton(int page, bool selected) {
-    return Container(
-      height: 32,
-      width: 32,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.marvelRed
+    return GestureDetector(
+      child: Container(
+        height: 32,
+        width: 32,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppColors.marvelRed
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          color: selected ? AppColors.marvelRed : Colors.white
         ),
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        color: selected ? AppColors.marvelRed : Colors.white
+        child: Center(
+          child: Text(page.toString(), style: TextStyle(
+            fontSize: 21, 
+            color: selected ? Colors.white : AppColors.marvelRed, 
+            fontFamily: 'Roboto'
+          ),)
+        ),
       ),
-      child: Center(
-        child: Text(page.toString(), style: TextStyle(
-          fontSize: 21, 
-          color: selected ? Colors.white : AppColors.marvelRed, 
-          fontFamily: 'Roboto'
-        ),)
-      ),
+      onTap: () {
+        if(!selected) {
+          viewModel.pageChange(page);
+        }
+      },
     );
   }
 
@@ -68,6 +77,19 @@ class SearchPageState extends State<SearchPage> {
     
     btnValue.removeWhere((element) => element > available);
 
+    int index = btnValue.indexOf(page);
+
+    if(index + 1 < btnValue.length){
+      nextButtonPage = btnValue[index + 1];
+    }else {
+      nextButtonPage = null;
+    }
+    if(index > 0){
+      backButtonPage = btnValue[index - 1];
+    }else {
+      backButtonPage = null;
+    }
+
     for (var value in btnValue) {
       if(value != 1) {
         btns.add(const Spacer(flex: 2,));
@@ -83,11 +105,25 @@ class SearchPageState extends State<SearchPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.arrow_left, size: 64, color: AppColors.marvelRed,),
+              GestureDetector(
+                child: Icon(Icons.arrow_left, size: 64, color: AppColors.marvelRed,),
+                onTap: () {
+                  if(backButtonPage != null){
+                    viewModel.pageChange(backButtonPage!);
+                  }
+                },
+              ),
               const Spacer(flex: 6,),
               ...btns,
               const Spacer(flex: 6,),
-              Icon(Icons.arrow_right, size: 64, color: AppColors.marvelRed,)
+              GestureDetector(
+                child: Icon(Icons.arrow_right, size: 64, color: AppColors.marvelRed,), 
+                onTap: () {
+                  if(nextButtonPage != null){
+                    viewModel.pageChange(nextButtonPage!);
+                  }
+                }
+              )
             ],
           ),
         ),
@@ -158,6 +194,11 @@ class SearchPageState extends State<SearchPage> {
                     return Padding(
                       padding: const EdgeInsets.all(42),
                       child: Center(child: Text('Ocorreu um erro, cheque sua conexão com a internet e tente novamente', textAlign: TextAlign.center, style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto'),),),
+                    );
+                  } else if (viewModel.screenStatus == Status.empty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(42),
+                      child: Center(child: Text('Não encontramos nenhum personagem com esse nome!', textAlign: TextAlign.center, style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto'),),),
                     );
                   }
                   return Column(

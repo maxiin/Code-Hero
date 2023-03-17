@@ -13,7 +13,8 @@ class SearchPageViewModel = SearchPageViewModelBase with _$SearchPageViewModel;
 enum Status {
   loading,
   error,
-  success
+  success,
+  empty
 }
 
 abstract class SearchPageViewModelBase with Store {
@@ -33,13 +34,15 @@ abstract class SearchPageViewModelBase with Store {
   int page = 1;
 
   Timer? timer;
+  String? cachedSearch;
 
   @action
   Future<void> search({String? query}) async {
     screenStatus = Status.loading;
     late MarvelSearch response;
     try {
-      response = await usecase.call(query);
+      cachedSearch = query;
+      response = await usecase.call(query, page);
     } catch (e) {
       debugPrint(e.toString());
       screenStatus = Status.error;
@@ -48,7 +51,16 @@ abstract class SearchPageViewModelBase with Store {
     page = response.page;
     available = response.available;
     heroes = response.heroes;
-    screenStatus = Status.success;
+    if(heroes.isNotEmpty) {
+      screenStatus = Status.success;
+    } else {
+      screenStatus = Status.empty;
+    }
+  }
+
+  @action pageChange(int pageNumber) async {
+    page = pageNumber;
+    search(query: cachedSearch);
   }
 
   @action prepareSearch(String text) async {
