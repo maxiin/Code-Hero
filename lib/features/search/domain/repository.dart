@@ -11,7 +11,7 @@ class SearchRepository implements SearchRepositoryInterface {
   SearchRepository(this.remote);
 
   @override
-  Future<List<MarvelHero>> search(String? query) async {
+  Future<MarvelSearch> search(String? query) async {
     SearchApi searchResponse = await remote.search(query);
     List<MarvelHero> heroesList = [];
     for (var heroesApi in searchResponse.results) {
@@ -29,12 +29,11 @@ class SearchRepository implements SearchRepositoryInterface {
           wiki: heroesApi.urls.firstWhere((element) => element.type == 'wiki', orElse: () => UrlApi(null, null)).url
         ));
     }
-    MarvelSearch(
+    return MarvelSearch(
       page: searchResponse.offset == 0 ? 1 : (searchResponse.offset / searchResponse.count).ceil(),
       available: (searchResponse.total / searchResponse.count).ceil(),
       heroes: heroesList
     );
-    return [];
   }
 
 }

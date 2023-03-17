@@ -13,4 +13,5 @@ class AppColors {
     800: Color(0xff94161b),
     900: Color(0xff7f1317),
   });
+  static Color marvelBlack = const Color(0xFF4E4E4E);
 }

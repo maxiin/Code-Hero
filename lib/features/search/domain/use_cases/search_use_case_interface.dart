@@ -1,5 +1,5 @@
-import 'package:objective/features/search/domain/model/hero.dart';
+import 'package:objective/features/search/domain/model/search.dart';
 
 abstract class SearchUseCaseInterface {
-  Future<List<MarvelHero>> call(String? query);
+  Future<MarvelSearch> call(String? query);
 }

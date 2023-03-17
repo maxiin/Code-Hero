@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:objective/features/search/data/marvel_search_remote.dart';
+import 'package:objective/features/search/domain/model/hero.dart';
 import 'package:objective/features/search/domain/repository.dart';
 import 'package:objective/features/search/domain/use_cases/search_use_case.dart';
 import 'package:objective/features/search/presentation/search_page_view_model.dart';
@@ -95,6 +96,16 @@ class SearchPageState extends State<SearchPage> {
     );
   }
 
+  Widget HeroCard(MarvelHero hero) {
+    return Row(children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(18.0, 18.0, 25.0, 18.0),
+        child: CircleAvatar(radius: 29, backgroundImage: NetworkImage(hero.thumbnail),),
+      ),
+      Text(hero.name, style: TextStyle(color: AppColors.marvelBlack, fontSize: 21, fontFamily: 'Roboto'),),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,18 +156,14 @@ class SearchPageState extends State<SearchPage> {
                       ),
                       Expanded(
                         child: ListView.builder(itemBuilder: (context, i) {
-                          return Text(i.toString());
-                        }),
+                          return HeroCard(viewModel.heroes[i]);
+                        }, itemCount: viewModel.heroes.length,),
                       )
                     ],
                   );
                 }
               )
             )
-            
-            // ListView.builder(itemBuilder: (BuildContext, int) {
-
-            // }),
           ],
         )
       ),

@@ -17,7 +17,7 @@ class MarvelSearchRemote implements MarvelSearchRemoteInterface {
     var bytes = utf8.encode("$ts$private$public");
     var digest = md5.convert(bytes);
     
-    final response = await dio.get('https://gateway.marvel.com:443/v1/public/characters', queryParameters: {'apikey': public, 'ts': ts, 'hash': digest.toString()});
+    final response = await dio.get('https://gateway.marvel.com:443/v1/public/characters', queryParameters: {'apikey': public, 'ts': ts, 'hash': digest.toString(), 'limit': 4});
     SearchApi search = SearchApi.fromJson(response.data['data']);
     return search;
   }

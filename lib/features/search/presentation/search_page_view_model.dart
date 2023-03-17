@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:objective/features/search/domain/model/hero.dart';
+import 'package:objective/features/search/domain/model/search.dart';
 import 'package:objective/features/search/domain/use_cases/search_use_case_interface.dart';
 
 part 'search_page_view_model.g.dart';
@@ -32,14 +33,17 @@ abstract class SearchPageViewModelBase with Store {
   @action
   Future<void> search({String? query}) async {
     screenStatus = Status.loading;
-    List<MarvelHero> response = [];
+    late MarvelSearch response;
     try {
       response = await usecase.call(query);
     } catch (e) {
       debugPrint(e.toString());
       screenStatus = Status.error;
+      return;
     }
-    heroes = response;
+    page = response.page;
+    available = response.available;
+    heroes = response.heroes;
     screenStatus = Status.success;
   }
 
