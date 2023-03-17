@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:objective/features/details/presentation/details_page.dart';
 import 'package:objective/features/search/data/marvel_search_remote.dart';
 import 'package:objective/features/search/domain/model/hero.dart';
 import 'package:objective/features/search/domain/repository.dart';
@@ -133,21 +134,30 @@ class SearchPageState extends State<SearchPage> {
   }
 
   Widget heroCard(MarvelHero hero) {
-    return Column(
-      children: [
-        Row(children: [
+    return GestureDetector(
+      child: Container(
+        color: const Color(0xFFFAFAFA),
+        child: Column(
+        children: [
+          Row(children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18.0, 18.0, 25.0, 18.0),
+              child: CircleAvatar(radius: 29, backgroundImage: NetworkImage(hero.thumbnail),),
+            ),
+            Text(hero.name, style: TextStyle(color: AppColors.marvelBlack, fontSize: 21, fontFamily: 'Roboto'),),
+          ]),
           Padding(
-            padding: const EdgeInsets.fromLTRB(18.0, 18.0, 25.0, 18.0),
-            child: CircleAvatar(radius: 29, backgroundImage: NetworkImage(hero.thumbnail),),
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Divider(height: 1, thickness: 1, color: AppColors.marvelRed),
+          )
+        ],
           ),
-          Text(hero.name, style: TextStyle(color: AppColors.marvelBlack, fontSize: 21, fontFamily: 'Roboto'),),
-        ]),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          child: Divider(height: 1, thickness: 1, color: AppColors.marvelRed),
-        )
-      ],
-    );
+      ), onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DetailsPage(hero)),
+      );
+    },);
   }
 
   @override
