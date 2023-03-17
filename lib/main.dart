@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:objective/features/presentation/search_page.dart';
+import 'package:objective/features/search/presentation/search_page.dart';
 import 'package:objective/shared/colors.dart';
 
 void main() {
