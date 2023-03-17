@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:objective/features/search/domain/model/hero.dart';
@@ -30,6 +32,8 @@ abstract class SearchPageViewModelBase with Store {
   @observable
   int page = 1;
 
+  Timer? timer;
+
   @action
   Future<void> search({String? query}) async {
     screenStatus = Status.loading;
@@ -45,6 +49,18 @@ abstract class SearchPageViewModelBase with Store {
     available = response.available;
     heroes = response.heroes;
     screenStatus = Status.success;
+  }
+
+  @action prepareSearch(String text) async {
+    screenStatus = Status.loading;
+    if(timer != null){
+      timer!.cancel();
+    }
+    timer = Timer(const Duration(milliseconds: 2000), () async {
+      await search(query: text);
+      timer!.cancel();
+      timer = null;
+    });
   }
 
 }

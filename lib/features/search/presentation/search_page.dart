@@ -134,10 +134,13 @@ class SearchPageState extends State<SearchPage> {
                   Container(color: AppColors.marvelRed, height: 4, width: 54,),
                   const SizedBox(height: 34,),
                   Text('Nome do Personagem', style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto'),),
-                  const SizedBox(
+                  SizedBox(
                     height: 31,
                     child: TextField(
-                      decoration: InputDecoration(
+                      onChanged: (text) {
+                        viewModel.prepareSearch(text);
+                      },
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
                     ),
