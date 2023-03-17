@@ -96,14 +96,22 @@ class SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget HeroCard(MarvelHero hero) {
-    return Row(children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(18.0, 18.0, 25.0, 18.0),
-        child: CircleAvatar(radius: 29, backgroundImage: NetworkImage(hero.thumbnail),),
-      ),
-      Text(hero.name, style: TextStyle(color: AppColors.marvelBlack, fontSize: 21, fontFamily: 'Roboto'),),
-    ]);
+  Widget heroCard(MarvelHero hero) {
+    return Column(
+      children: [
+        Row(children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18.0, 18.0, 25.0, 18.0),
+            child: CircleAvatar(radius: 29, backgroundImage: NetworkImage(hero.thumbnail),),
+          ),
+          Text(hero.name, style: TextStyle(color: AppColors.marvelBlack, fontSize: 21, fontFamily: 'Roboto'),),
+        ]),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: Divider(height: 1, thickness: 1, color: AppColors.marvelRed),
+        )
+      ],
+    );
   }
 
   @override
@@ -114,20 +122,27 @@ class SearchPageState extends State<SearchPage> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 42),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Busca Marvel'.toUpperCase(), style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.w700),), 
-                  Text('Teste Mobile'.toUpperCase(), style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.w300),)
+                  Row(
+                    children: [
+                      Text('Busca Marvel'.toUpperCase(), style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.w700),), 
+                      Text('Teste Mobile'.toUpperCase(), style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.w300),)
+                    ],
+                  ),
+                  Container(color: AppColors.marvelRed, height: 4, width: 54,),
+                  const SizedBox(height: 34,),
+                  Text('Nome do Personagem', style: TextStyle(color: AppColors.marvelRed, fontSize: 16, fontFamily: 'Roboto'),),
+                  const SizedBox(
+                    height: 31,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
                 ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 42.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Nome do personagem'
-                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -156,7 +171,7 @@ class SearchPageState extends State<SearchPage> {
                       ),
                       Expanded(
                         child: ListView.builder(itemBuilder: (context, i) {
-                          return HeroCard(viewModel.heroes[i]);
+                          return heroCard(viewModel.heroes[i]);
                         }, itemCount: viewModel.heroes.length,),
                       )
                     ],
